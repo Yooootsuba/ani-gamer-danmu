@@ -2,25 +2,26 @@ local utils = require "mp.utils"
 local options = require "mp.options"
 
 
-local is_windows = package.config:sub(1, 1) ~= "/"
-local exe = is_windows and "danmu-get.exe" or "danmu-get"
-local path = mp.command_native({"expand-path", "~~/bin/"})
-
-
-local danmus = {}
-local danmu_hidden = false
-local danmu_overlay = mp.create_osd_overlay("ass-events")
-
-
 local opts = {}
 
 opts["font-size"] = 16
 opts["danmu-duration"] = 10000
 opts["danmu-gap"] = 0
 opts["anchor"] = 1
+opts["danmu-hidden-default"] = false
 
 options.read_options(opts)
 options.read_options(opts, "ani-gamer-com")
+
+
+local is_windows = package.config:sub(1, 1) ~= "/"
+local exe = is_windows and "danmu-get.exe" or "danmu-get"
+local path = mp.command_native({"expand-path", "~~/bin/"})
+
+
+local danmus = {}
+local danmu_hidden = opts["danmu-danmu-hidden-default"]
+local danmu_overlay = mp.create_osd_overlay("ass-events")
 
 
 -- Auto generation by ChatGPT
