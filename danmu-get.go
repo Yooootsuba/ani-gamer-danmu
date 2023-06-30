@@ -2,10 +2,10 @@ package main
 
 import (
     "os"
-	"fmt"
+    "fmt"
     "strings"
     "net/url"
-	"net/http"
+    "net/http"
     "io/ioutil"
 )
 
@@ -19,14 +19,14 @@ func main() {
     data := url.Values{}
     data.Set("sn", parseSn())
 
-	req, _ := http.NewRequest("POST", api, strings.NewReader(data.Encode()))
+    req, _ := http.NewRequest("POST", api, strings.NewReader(data.Encode()))
     req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0")
+    req.Header.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0")
 
-	client := &http.Client{}
-	resp, _ := client.Do(req)
-	defer resp.Body.Close()
+    client := &http.Client{}
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println(string(body))
+    body, _ := ioutil.ReadAll(resp.Body)
+    fmt.Println(string(body))
 }
