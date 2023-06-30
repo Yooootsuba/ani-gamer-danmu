@@ -2,6 +2,21 @@
 
 在 MPV 觀看巴哈姆特動畫瘋時，可以支援彈幕列表
 
+* 快捷鍵開關彈幕
+
+* 快捷鍵切換彈幕位置
+
+* 預設開啟 / 關閉彈幕
+
+* 預設彈幕字體大小可調整
+
+* 預設彈幕位置可調整
+
+![](https://github.com/Yooootsuba/ani-gamer-danmu/blob/main/imgs/demo1.png)
+
+![](https://github.com/Yooootsuba/ani-gamer-danmu/blob/main/imgs/demo2.png)
+
+
 ## 下載
 
 將專案下載至電腦後解壓縮
