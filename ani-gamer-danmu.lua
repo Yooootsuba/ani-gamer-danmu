@@ -3,6 +3,7 @@ local options = require "mp.options"
 
 
 local exe = "danmu-get"
+local path = mp.command_native({"expand-path", "~~/bin/"})
 
 
 local danmus = {}
@@ -104,7 +105,7 @@ function generate_danmus(danmu_json_strings)
 end
 
 function danmus_get(sn)
-    local handle = io.popen(exe .. " " .. sn)
+    local handle = io.popen(path .. exe .. " " .. sn)
     local output = handle:read("*a")
     handle:close()
     return output
