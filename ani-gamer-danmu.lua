@@ -2,7 +2,8 @@ local utils = require "mp.utils"
 local options = require "mp.options"
 
 
-local exe = "danmu-get"
+local is_windows = package.config:sub(1, 1) ~= "/"
+local exe = is_windows and "danmu-get.exe" or "danmu-get"
 local path = mp.command_native({"expand-path", "~~/bin/"})
 
 
