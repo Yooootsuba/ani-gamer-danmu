@@ -1,25 +1,30 @@
-local utils = require 'mp.utils'
-local options = require 'mp.options'
+local utils = require "mp.utils"
+local options = require "mp.options"
 
 
 local exe = "danmu-get"
 
+
 local danmus = {}
-local danmu_overlay = mp.create_osd_overlay("ass-events")
 local danmu_hidden = false
+local danmu_overlay = mp.create_osd_overlay("ass-events")
+
 
 local opts = {}
-opts['auto-load'] = false
-opts['color'] = 'random'
-opts['font-size'] = 16
-opts['danmu-duration'] = 10000
-opts['danmu-gap'] = 0
-opts['anchor'] = 1
+
+opts["font-size"] = 16
+opts["danmu-duration"] = 10000
+opts["danmu-gap"] = 0
+opts["anchor"] = 1
+
+options.read_options(opts)
+options.read_options(opts, "ani-gamer-com")
+
 
 -- Auto generation by ChatGPT
 function urldecode(url)
-    url = url:gsub('+', ' ')
-    url = url:gsub('%%(%x%x)', function(h)
+    url = url:gsub("+", " ")
+    url = url:gsub("%%(%x%x)", function(h)
         return string.char(tonumber(h, 16))
     end)
     return url
@@ -41,15 +46,15 @@ function format_danmu(danmu)
     local lines = danmu_string:gsub("^[%s　]+", ""):gmatch("([^\n]*)\n?")
 
     for line in lines do
-        local formatting = '{\\an' .. opts['anchor'] .. '}' .. '{\\fs' .. opts['font-size'] .. '}'
-        local danmu_string = formatting .. line
+        local formatting = "{\\an" .. opts["anchor"] .. "}" .. "{\\fs" .. opts["font-size"] .. "}"
+        local danmu_string = formatting .. "{\\1c&H" .. danmu.color .. "&}" .. line
         if result == nil then
             result = danmu_string
         else
-            if opts['anchor'] <= 3 then
-                result = danmu_string .. '\n' .. result
+            if opts["anchor"] <= 3 then
+                result = danmu_string .. "\n" .. result
             else
-                result = result .. '\n' .. danmu_string
+                result = result .. "\n" .. danmu_string
             end
         end
     end
@@ -63,22 +68,22 @@ function update_danmu_overlay(_, time)
 
     local msec = time * 1000
 
-    danmu_overlay.data = ''
+    danmu_overlay.data = ""
     for i=1,#danmus do
         local danmu = danmus[i]
         if danmu.time > msec then
             break
-        elseif msec <= danmu.time + opts['danmu-duration'] then
+        elseif msec <= danmu.time + opts["danmu-duration"] then
             local danmu_string = format_danmu(danmu)
-            if opts['anchor'] <= 3 then
+            if opts["anchor"] <= 3 then
                 danmu_overlay.data =    danmu_string
-                                    .. '\n'
-                                    .. '{\\fscy' .. opts['danmu-gap'] .. '}{\\fscx0}\\h{\fscy\fscx}'
+                                    .. "\n"
+                                    .. "{\\fscy" .. opts["danmu-gap"] .. "}{\\fscx0}\\h{\fscy\fscx}"
                                     .. danmu_overlay.data
             else
                 danmu_overlay.data =    danmu_overlay.data
-                                    .. '{\\fscy' .. opts['danmu-gap'] .. '}{\\fscx0}\\h{\fscy\fscx}'
-                                    .. '\n'
+                                    .. "{\\fscy" .. opts["danmu-gap"] .. "}{\\fscx0}\\h{\fscy\fscx}"
+                                    .. "\n"
                                     .. danmu_string
             end
         end
@@ -92,7 +97,8 @@ function generate_danmus(danmu_json_strings)
     for i=1,#danmu_json do
         danmus[#danmus+1] = {
             time = formattime(tonumber(danmu_json[i].time)),
-            text = danmu_json[i].text
+            text = danmu_json[i].text,
+            color = danmu_json[i].color:sub(2)
         }
     end
 end
@@ -116,6 +122,38 @@ function file_loaded()
         generate_danmus(danmu_json_strings)
     end
 end
+
+function set_danmu_hidden(state)
+    if state == nil then
+        danmu_hidden = not danmu_hidden
+    else
+        danmu_hidden = state == "yes"
+    end
+
+    if danmu_overlay ~= nil then
+        if danmu_hidden then
+            mp.command("show-text '隱藏彈幕'")
+            danmu_overlay:remove()
+        else
+            mp.command("show-text '顯示彈幕'")
+            update_danmu_overlay(mp.get_property_native("time-pos"))
+        end
+    end
+end
+
+function set_danmu_anchor(anchor)
+    if anchor == nil then
+        opts["anchor"] = (opts["anchor"] % 9) + 1
+    else
+        opts["anchor"] = tonumber(anchor)
+    end
+    if danmu_overlay then
+        update_danmu_overlay(mp.get_property_native("time-pos"))
+    end
+end
+
+mp.add_key_binding(nil, "danmu-hidden", set_danmu_hidden)
+mp.add_key_binding(nil, "danmu-anchor", set_danmu_anchor)
 
 mp.register_event("file-loaded", file_loaded)
 mp.observe_property("time-pos", "native", update_danmu_overlay)
