@@ -62,6 +62,12 @@ CTRL+d script-message danmu-hidden
 
 請確認你已經將 script-opts/ani-gamer-danmu.conf 放到你的 MPV script-opts 資料夾
 
+color 可以開關彈幕高亮化，請填入 yes 或 no
+
+anchor 可以調整彈幕預設位置，一共有 1-9 可以選擇，經調整後彈幕的位置會像是數字鍵盤 1-9 的方位一樣
+
+danmu-hidden-default 可以選擇是否預設開啟彈幕，請填入 yes 或 no
+
 ```
 color=yes
 font-size=16
@@ -70,3 +76,17 @@ danmu-gap=0
 anchor=1
 danmu-hidden-default=no
 ```
+
+## 已知 BUG
+
+* Emojis 顯示不清楚
+
+* 某些罕見字可能會顯示亂碼
+
+## License
+
+This code is based on the mpv-youtube-chat project by BanchouBoo.
+
+Original code: [BanchouBoo/mpv-youtube-chat](https://github.com/BanchouBoo/mpv-youtube-chat)
+
+License: MIT License
