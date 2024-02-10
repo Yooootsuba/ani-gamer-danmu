@@ -25,8 +25,6 @@ https://github.com/Yooootsuba/ani-gamer-danmu/archive/refs/heads/main.zip
 
 ## 安裝
 
-將 bin/ 放到你的 MPV 資料夾
-
 將 scripts/ani-gamer-danmu.lua 放到你的 MPV scripts 資料夾
 
 將 script-opts/ani-gamer-danmu.conf 放到你的 MPV script-opts 資料夾（非必要）
@@ -35,9 +33,6 @@ https://github.com/Yooootsuba/ani-gamer-danmu/archive/refs/heads/main.zip
 
 ```
 .
-├── bin
-│   ├── danmu-get
-│   └── danmu-get.exe
 ├── input.conf
 ├── mpv.conf
 ├── script-opts
