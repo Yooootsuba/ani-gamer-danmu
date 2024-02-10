@@ -1,7 +1,6 @@
 local utils = require "mp.utils"
 local options = require "mp.options"
 
-
 local opts = {}
 
 opts["color"] = true
@@ -13,11 +12,6 @@ opts["danmu-hidden-default"] = false
 
 options.read_options(opts)
 options.read_options(opts, "ani-gamer-danmu")
-
-
-local is_windows = package.config:sub(1, 1) ~= "/"
-local exe = is_windows and "danmu-get.exe" or "danmu-get"
-local path = mp.command_native({"expand-path", "~~/bin/"})
 
 
 local danmus = {}
@@ -110,7 +104,15 @@ function generate_danmus(danmu_json_strings)
 end
 
 function danmus_get(sn)
-    local handle = io.popen(path .. exe .. " " .. sn)
+    -- Define the API endpoint, content type, and user agent for making requests
+    local api = "https://ani.gamer.com.tw/ajax/danmuGet.php"
+    local content_type = "Content-Type: application/x-www-form-urlencoded"
+    local user_agent = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0"
+
+    -- Command to execute CURL with POST request to the API
+    local command = string.format('curl -X "POST" -d "sn=%s" -H "%s" -H "%s" "%s"', sn, content_type, user_agent, api)
+
+    local handle = io.popen(command)
     local output = handle:read("*a")
     handle:close()
     return output
